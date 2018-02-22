@@ -1,3 +1,8 @@
+"""
+Created on 22.02.2018
+@author: artem.glazkov @allront
+"""
+
 import pandas as pd
 import pyodbc
 import datetime
