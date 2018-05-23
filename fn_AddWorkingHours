@@ -1,0 +1,46 @@
+CREATE FUNCTION [ssr].[fn_AddWorkingHours] (@startdate datetime, @hourtoadd int) 
+RETURNS DATETIME
+as
+BEGIN
+	DECLARE @enddate datetime
+	SET @enddate = @startdate
+
+	WHILE @hourtoadd > 8
+	BEGIN
+		SET @enddate = DATEADD (DAY,1,@enddate)
+		
+		WHILE (SELECT NonWorkDay FROM ref.DimDate WHERE DWDateKey=CAST(@enddate as date)) = 1 --Your DimDate table should have 1 for Non-Workday 
+		BEGIN
+			SET @enddate = DATEADD (DAY,1,@startdate)
+		END
+		
+		SET @hourtoadd = @hourtoadd -8
+	END
+
+	WHILE @hourtoadd <> 0
+	BEGIN
+		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))<=18
+		BEGIN
+			SET @enddate = DATEADD (HOUR,@hourtoadd,@enddate)
+			SET @hourtoadd = 0
+		END
+		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))>18
+		BEGIN
+			SET @enddate = DATEADD(DAY,1,DATETIMEFROMPARTS (YEAR(@enddate), MONTH(@enddate), DAY(@enddate)
+			,10+
+			DATEDIFF
+			(HOUR
+			,DATETIMEFROMPARTS (YEAR(@enddate), MONTH(@enddate), DAY(@enddate),18,00,00,00) -- assume that the end of working day is 18:00
+			,DATEADD (HOUR,@hourtoadd,@enddate)
+			)
+			,00,00,00))
+			WHILE (SELECT NonWorkDay FROM ref.DimDate WHERE DWDateKey=CAST(@enddate as date)) = 1 
+			BEGIN
+				SET @enddate = DATEADD (DAY,1,@enddate)
+			END
+			SET @hourtoadd = 0
+		END
+	END
+
+RETURN @enddate
+END 
