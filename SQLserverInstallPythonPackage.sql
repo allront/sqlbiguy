@@ -15,3 +15,4 @@ def install_and_import(package):
 
 install_and_import(''simple_salesforce'')
 '
+-- to be done in future - create tsql proc, and tranfert package name into sp_xecute_external_script proc
