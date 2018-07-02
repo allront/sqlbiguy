@@ -1,0 +1,13 @@
+CREATE FUNCTION dbo.udf_YbyTwoPoints (@X float,@X1 float,@Y1 float,@X2 float,@Y2 float)
+-- retun y for given two points x1,y1,x2,y2
+-- slope function in y = m*x + b
+RETURNS float
+BEGIN 
+	DECLARE @dx float = @X2 - @X1
+	IF @dx = 0 RETURN NULL
+	
+	DECLARE @m float = (@Y2 - @Y1) / @dx
+	DECLARE @b float = @Y1 - (@m * @X1)
+
+	RETURN (@m * @X + @b)
+END
