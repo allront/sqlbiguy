@@ -1,6 +1,5 @@
 CREATE FUNCTION dbo.udf_YbyTwoPoints (@X float,@X1 float,@Y1 float,@X2 float,@Y2 float)
--- retun y for given two points x1,y1,x2,y2
--- slope function in y = m*x + b
+-- return y for given two points x1,y1,x2,y2. function is y = m*x + b
 RETURNS float
 BEGIN 
 	DECLARE @dx float = @X2 - @X1
@@ -11,3 +10,24 @@ BEGIN
 
 	RETURN (@m * @X + @b)
 END
+
+GO
+
+ALTER FUNCTION [tech].[udf_SlopeEquation] (@X1 float,@Y1 float,@X2 float,@Y2 float)
+-- return equation y = m*x + b for given two points x1,y1,x2,y2
+RETURNS NVARCHAR(255)
+BEGIN
+	
+	DECLARE @dx float = @X2 - @X1
+	IF @dx = 0 RETURN NULL
+	
+	DECLARE @m float = (@Y2 - @Y1) / @dx
+	DECLARE @b float = @Y1 - (@m * @X1)
+
+	--PRINT (CONCATENATE('Y = ',@m,' x ','+ ',@b))
+	--PRINT (CONCAT('M = ',@m))
+	--PRINT (CONCAT('B = ',@b))
+
+	RETURN (CONCAT('function Y = ',@m,' * X ','+ ',@b,' .  M = ',@m,' B = ',@b))
+END
+GO
