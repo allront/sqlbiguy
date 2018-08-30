@@ -15,12 +15,12 @@ BEGIN
 	END
 	WHILE @hourtoadd <> 0
 	BEGIN
-		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))<18
+		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))<18 AND DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))>=10
 		BEGIN
 			SET @enddate = DATEADD (HOUR,@hourtoadd,@enddate)
 			SET @hourtoadd = 0
 		END
-		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))>=18
+		IF DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))>=18 OR DATEPART(HOUR, DATEADD (HOUR,@hourtoadd,@enddate))<10
 		BEGIN
 			SET @enddate = DATEADD(DAY,1,DATETIMEFROMPARTS (YEAR(@enddate), MONTH(@enddate), DAY(@enddate)
 			,10+
