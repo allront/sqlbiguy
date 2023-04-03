@@ -19,7 +19,7 @@ nlc2 = NonlinearConstraint(con2, -np.inf,row['Max_N'])
 cons = [nlc,nlc2]
 
 #Начальное значение Q
-x0 = row['Сonsumption_Q']
+x0 = row['Consumption_Q']
 
 #Граничные условия Q
 b1 = (0,10)
